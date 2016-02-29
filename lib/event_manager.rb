@@ -5,8 +5,19 @@ require 'sunlight/congress'
 Sunlight::Congress.api_key = "e179a6973728c4dd3fb1204283aaccb5"
 
 def clean_phone(phone)
+  phone.gsub(/\D/, "")
+end
+
+def validate_phone(phone)
   phone.slice!(0) if phone.length == 11 && phone[0] == '1'
-  phone.length == 10 ? phone : false
+  phone.length == 10 ? phone : "BadNumber"
+end
+
+def format_phone(phone)
+  phone = phone.chars.insert(-5, '-')
+  phone = phone.insert(3, ') ')
+  phone = phone.insert(0, '(')
+  phone.join
 end
 
 def clean_zipcode(zip)
@@ -37,6 +48,8 @@ erb_template = ERB.new template_letter
 contents.each do |row|
   id = row[0]
   name = row[:first_name]
+  phone = validate_phone(clean_phone(row[:homephone]))
+  formatted_phone = format_phone(phone)
 
   zipcode = clean_zipcode(row[:zipcode])
 
@@ -46,3 +59,4 @@ contents.each do |row|
 
   save_thank_you_letters(id, form_letter)
 end
+puts "Done"
