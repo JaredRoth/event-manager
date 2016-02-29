@@ -10,7 +10,7 @@ end
 
 def validate_phone(phone)
   phone.slice!(0) if phone.length == 11 && phone[0] == '1'
-  phone.length == 10 ? phone : "BadNumber"
+  phone.length == 10 ? phone : "BadNumber "
 end
 
 def format_phone(phone)
